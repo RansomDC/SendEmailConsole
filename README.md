@@ -3,10 +3,11 @@
 This application was build using C# and .NET core 6.0 in Visual Studio 2022
 
 ### NuGet Packages included in this project:
-Microsoft.EntityFrameworkCore 6.0.1
-Microsoft.EntityFrameworkCore.Design 6.0.1
-Microsoft.EntityFrameworkCore.SqlServer 6.0.1
-Microsoft.Extensions.Hosting 6.0.1
+* Microsoft.EntityFrameworkCore 6.0.1
+* Microsoft.EntityFrameworkCore.Design 6.0.1
+* Microsoft.EntityFrameworkCore.SqlServer 6.0.1
+* Microsoft.Extensions.Hosting 6.0.1
+
 
 The console application was built to send emails. The main criteria were as follows:
 
