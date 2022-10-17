@@ -25,39 +25,58 @@ namespace SendEmailConsole
             // This creates an Email object instance using the interface from the service declared above
             var emailSVC = ActivatorUtilities.CreateInstance<Email>(host.Services);
 
+            
 
-            //bool writeAnother = true;
-            //while (writeAnother == true){
+            bool writeAnother = true;
+            while (writeAnother == true)
+            {
 
-            //    Console.WriteLine("Please enter the email address of the person you want to email:");
-            //    string recipient = Console.ReadLine();
+                Console.WriteLine("Please enter the email address of the person you want to email:");
+                string recipient = Console.ReadLine();
 
-            //    Console.WriteLine("Please enter your email address:");
-            //    string sender = Console.ReadLine();
+                Console.WriteLine("Please enter your email address:");
+                string sender = Console.ReadLine();
 
-            //    Console.WriteLine("Please enter the email's subject");
-            //    string subject = Console.ReadLine();
+                Console.WriteLine("Please enter the email's subject");
+                string subject = Console.ReadLine();
 
-            //    Console.WriteLine("Please enter the message you would like to send");
-            //    string body = Console.ReadLine();
+                Console.WriteLine("Please enter the message you would like to send");
+                string body = Console.ReadLine();
 
-
-
-            //}
-
-
-
-            // This calls the email instance's SendEmail() method asynchronously
-            _ = emailSVC.SendEmail("ransomcadorette@gmail.com", "cadorette.test@gmail.com", "Test Subject", "Test Body");
+                Console.WriteLine("Sending your email!");
 
 
-            Console.WriteLine("sent");
+
+
+                // This calls the Email instance's SendEmail() method asynchronously
+                _ = emailSVC.SendEmail(sender, recipient, subject, body);
+
+                Console.WriteLine("Would you like to write another email? Y/N");
+                string response = Console.ReadLine();
+                if (response != "Y" && response != "N")
+                {
+                    Console.WriteLine("Please enter only Y or N");
+                }
+                else if(response == "N")
+                {
+                    writeAnother = false;
+                }
+
+            }
+
+
+
+
+
+
+
 
             Console.ReadLine();
         }
 
 
-        //Added NuGet package Microsoft.Extensions.Hosting
+        //Added NuGet package:   Microsoft.Extensions.Hosting
+        //Added NuGet package:   Microsoft.EntityFrameworkCore.SqlServer
 
 
     }

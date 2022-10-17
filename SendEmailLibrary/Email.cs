@@ -49,6 +49,8 @@ namespace SendEmailLibrary
                     await smtpClient.SendMailAsync(message);
                 }
 
+                Console.WriteLine("sent");
+
             }
             catch (System.Net.Mail.SmtpException)
             {
@@ -66,15 +68,6 @@ namespace SendEmailLibrary
             }
             catch (Exception ex)
             {
-                // If send fails for any other reason. The application will re-attempt 3 times.
-
-                //int timesSent = sendAttempt + 1;
-                //if (timesSent <= 3)
-                //{
-                //    var resend = new Email();
-                //    resend.SendEmail(sender, recipient, subject, body, timesSent);
-                //    Console.WriteLine($"SendEmail attempt number {timesSent} failed.");
-                //}
 
                 Console.WriteLine(ex);
 
