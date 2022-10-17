@@ -22,7 +22,11 @@ The console application was built to send emails. The main criteria were as foll
 ## Directions for downloading and running this application
 1. Download the code (e.g SendEmailConsole.zip)
 2. Start the program in Visual Studio 2022
-3. Enter the credentials for the SMTP you want to use in the appsettings.json file. This should simply take a username and password
+3. Enter the credentials for the SMTP you want to use in the appsettings.json file. This should include: 
+  * An smtp server (e.g. smtp-relay.sendinblue.com)
+  * A port (e.g. 587)
+  * A username for your smtp service (e.g. myemail@example.com)
+  * A password for your smp service
 4. Build the SendEmailLibrary
 5. Build the SendEmailConsole
 6. Run the program!
