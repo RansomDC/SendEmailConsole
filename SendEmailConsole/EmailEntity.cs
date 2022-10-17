@@ -8,6 +8,7 @@ namespace SendEmailConsole
 {
     internal class EmailEntity
     {
+        public int id { get; set; }
         public string senderAddress { get; set; }
         public string recipeintAddress { get; set; }
         public string subject { get; set; }
