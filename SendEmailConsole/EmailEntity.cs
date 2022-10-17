@@ -13,6 +13,7 @@ namespace SendEmailConsole
         public string recipeintAddress { get; set; }
         public string subject { get; set; }
         public string body { get; set; }
+        public bool sendSuccessful { get; set; }
         public DateTime sendTime { get; set; }
     }
 }
