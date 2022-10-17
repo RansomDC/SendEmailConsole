@@ -49,18 +49,19 @@ namespace SendEmailConsole
 
                 Console.WriteLine("Sending your email!");
 
-                for(int i = 1; i < 3; i++)
+                for(int i = 1; i <= 3; i++)
                 {
                     try
                     {
                         // This calls the Email instance's SendEmail() method asynchronously
                         _ = emailSVC.SendEmail(sender, recipient, subject, body);
                         _ = writeToDB(sender, recipient, subject, body, true);
+
                         break;
                     }
                     catch (Exception ex)
                     {
-
+                        // If the for loop that attempts to send the email fails (goes to this catch block three times) the email will not be sent and will be logged as a failure.
                         if(i == 3)
                         {
                             _ = writeToDB(sender, recipient, subject, body, false);
