@@ -9,6 +9,7 @@ This application was build using C# and .NET core 6.0 in Visual Studio 2022
 * Microsoft.Extensions.Hosting 6.0.1
 
 
+## Explanation
 The console application was built to send emails. The main criteria were as follows:
 
 1. The SendEmail Method needed to be in an external dll. (The SendEmailLibrary.dll can now be used in other applications with minimal adjustments)
@@ -18,7 +19,7 @@ The console application was built to send emails. The main criteria were as foll
 5. The user must not be interrupted or delayed while navigating the website simply because an email fails to send.
 
 
-# Directions for downloading and running this application
+## Directions for downloading and running this application
 1. Download the code (e.g SendEmailConsole.zip)
 2. Start the program in Visual Studio 2022
 3. Enter the credentials for the SMTP you want to use in the appsettings.json file. This should simply take a username and password
