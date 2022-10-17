@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 
 namespace SendEmailConsole
 {
-    internal class EmailEntity
+    public class EmailEntity
     {
+        public int id { get; set; }
         public string senderAddress { get; set; }
         public string recipeintAddress { get; set; }
         public string subject { get; set; }
         public string body { get; set; }
+        public bool sendSuccessful { get; set; }
         public DateTime sendTime { get; set; }
     }
 }
