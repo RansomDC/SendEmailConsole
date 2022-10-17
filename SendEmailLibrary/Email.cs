@@ -5,14 +5,25 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace SendEmailLibrary
 {
-    public static class Email
+    public class Email : IEmail
     {
 
+        private readonly IConfiguration _config;
+
+        // Constructor for the Email class
+        public Email(IConfiguration config)
+        {
+            _config = config;
+        }
+
         // This method can be called to use generate an email
-        public static async Task SendEmail(string sender, string recipient, string subject, string body, int sendAttempt = 1)
+        public async Task SendEmail(string sender, string recipient, string subject, string body, int sendAttempt = 1)
         {
 
             try
@@ -31,7 +42,7 @@ namespace SendEmailLibrary
                 {
                     smtpClient.EnableSsl = true;
                     smtpClient.UseDefaultCredentials = false;
-                    smtpClient.Credentials = new NetworkCredential("david.r.cadorette@gmail.com", "C2FjdyzBcZJ1LUOY");
+                    smtpClient.Credentials = new NetworkCredential(_config.GetValue<string>("User"), _config.GetValue<string>("Password"));
                     smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
                     // Sends the compiled message asynchronously
@@ -57,13 +68,14 @@ namespace SendEmailLibrary
             {
                 // If send fails for any other reason. The application will re-attempt 3 times.
 
-                int timesSent = sendAttempt + 1;
-                if (timesSent <= 3)
-                {
-                    _ = Email.SendEmail(sender, recipient, subject, body, timesSent);
-                    Console.WriteLine($"SendEmail attempt number {timesSent} failed.");
-                }
-                
+                //int timesSent = sendAttempt + 1;
+                //if (timesSent <= 3)
+                //{
+                //    var resend = new Email();
+                //    resend.SendEmail(sender, recipient, subject, body, timesSent);
+                //    Console.WriteLine($"SendEmail attempt number {timesSent} failed.");
+                //}
+
                 Console.WriteLine(ex);
 
             }
