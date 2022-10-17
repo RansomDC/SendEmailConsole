@@ -38,7 +38,7 @@ namespace SendEmailLibrary
                 message.Body = body;
 
                 // Opens connection to SMTP client which will relay the message
-                using (var smtpClient = new SmtpClient("smtp-relay.sendinblue.com", 587))
+                using (var smtpClient = new SmtpClient(_config.GetValue<string>("SMTPServer"), _config.GetValue<int>("SMTPPort")))
                 {
                     smtpClient.EnableSsl = true;
                     smtpClient.UseDefaultCredentials = false;
