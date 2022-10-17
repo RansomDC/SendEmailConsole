@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SendEmailConsole
 {
-    internal class EmailEntity
+    public class EmailEntity
     {
         public int id { get; set; }
         public string senderAddress { get; set; }

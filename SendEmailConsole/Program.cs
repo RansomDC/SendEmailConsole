@@ -77,6 +77,9 @@ namespace SendEmailConsole
 
         //Added NuGet package:   Microsoft.Extensions.Hosting
         //Added NuGet package:   Microsoft.EntityFrameworkCore.SqlServer
+        //Added NuGet package:   Microsoft.EntityFrameworkCore.Design
+        //Added NuGet package:   Microsoft.EntityFrameworkCore
+        //Added NuGet package:   
 
 
     }
