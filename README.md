@@ -27,6 +27,9 @@ The console application was built to send emails. The main criteria were as foll
   * A port (e.g. 587)
   * A username for your smtp service (e.g. myemail@example.com)
   * A password for your smp service
-4. Build the SendEmailLibrary
-5. Build the SendEmailConsole
-6. Run the program!
+4. Make migrations for the database and then create the database in the Package Manager Console with:
+  * add-migration <Insert migration name>
+  * update-database
+5. Build the SendEmailLibrary
+6. Build the SendEmailConsole
+7. Run the program!
