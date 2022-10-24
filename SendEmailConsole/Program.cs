@@ -47,7 +47,7 @@ namespace SendEmailConsole
                 string body = Console.ReadLine();
                 if (body == "") { body = "<No body>"; }
 
-                Console.WriteLine("Sending your email!");
+                Console.WriteLine("Attempting to send your email!");
 
                 for(int i = 1; i <= 3; i++)
                 {

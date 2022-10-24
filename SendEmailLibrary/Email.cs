@@ -23,7 +23,7 @@ namespace SendEmailLibrary
         }
 
         // This method can be called to use generate an email
-        public async Task SendEmail(string sender, string recipient, string subject, string body, int sendAttempt = 1)
+        public async Task SendEmail(string sender, string recipient, string subject, string body)
         {
 
             try
@@ -31,11 +31,20 @@ namespace SendEmailLibrary
 
                 var message = new MailMessage();
 
-                // These declare the context of the message
-                message.From = new MailAddress(sender);
-                message.To.Add(recipient);
-                message.Subject = subject;
-                message.Body = body;
+                try
+                {
+                    // These declare the context of the message
+                    message.From = new MailAddress(sender);
+                    message.To.Add(recipient);
+                    message.Subject = subject;
+                    message.Body = body;
+                }
+                catch (ArgumentException argex)
+                {
+                    Console.WriteLine("One or more of the email addresses entered contained no value. \nPlease include only email addresses in the following format:  \"address@example.com\"");
+                    Console.WriteLine(argex);
+                }
+
 
                 // Opens connection to SMTP client which will relay the message
                 using (var smtpClient = new SmtpClient(_config.GetValue<string>("SMTPServer"), _config.GetValue<int>("SMTPPort")))
