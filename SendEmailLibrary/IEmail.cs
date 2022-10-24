@@ -4,6 +4,6 @@ namespace SendEmailLibrary
 {
     public interface IEmail
     {
-        Task<bool> SendEmail(MailMessage message);
+        Task SendEmail(string sender, string recipient, string subject, string body, int attempts = 1);
     }
 }

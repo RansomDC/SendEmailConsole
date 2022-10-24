@@ -14,6 +14,9 @@ namespace SendEmailConsole
         public static void Main(string[] args)
         {
 
+            //==================================
+            //  DI and appsettings.json access
+            //==================================
 
             //CreateDefaultBuilder() Creates a host object which loads IConfiguration for appsettings.json
             //configureservices enables the use of dependency injection using the services that are declared within the method call
@@ -29,82 +32,98 @@ namespace SendEmailConsole
 
 
 
-            //User Interface for sending emails
+            //=================================
+            //   User Interface begins here
+            //=================================
+            //Greeting
+            Console.WriteLine("Hello, and welcome to the email sender. Please enter the information of the email you would like to send,\nif you are unhappy with your email you can choose not to send it at the end of the process");
+
+            // The following loop continues as long as the user wants to keep sending emails. writeAnother has the opportunity to change based on user input.
             bool writeAnother = true;
             while (writeAnother == true)
             {
 
-                Console.WriteLine("Please enter the email address of the person you want to email:");
-                string recipient = Console.ReadLine();
+                //We will use this message object to validate the input of our users.
+                var testMessage = new MailMessage();
 
+                Console.WriteLine("\nPlease enter the email address of the person you want to email:");
+                string recipient;
+                do
+                {
+                    try
+                    {
+                        recipient = Console.ReadLine();
+                        testMessage.To.Add(recipient);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Please be sure that your input is in the format \"example@email.com\"");
+                        recipient = "";
+                    }
+                } while (recipient == "");
+
+                
                 Console.WriteLine("Please enter your email address:");
-                string sender = Console.ReadLine();
+                string sender;
+                // Validates the input received from the above
+                do
+                {
+                    try
+                    {
+                        sender = Console.ReadLine();
+                        testMessage.From = new MailAddress(sender);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Please be sure that your input is in the format \"example@email.com\"");
+                        sender = "";
+                    }
+                } while (sender == "");
 
+                //Get email subject from user, provide default value if none is given
                 Console.WriteLine("Please enter the email's subject");
                 string subject = Console.ReadLine();
                 if (subject == "") { subject = "<No Subject>"; }
 
+                //Get email body from user, provide default value if none is given
                 Console.WriteLine("Please enter the message you would like to send");
                 string body = Console.ReadLine();
                 if (body == "") { body = "<No body>"; }
 
-                Console.WriteLine("Attempting to send your email.");
 
-
-                var message = new MailMessage();
-
-                try
+                // Checks to see if the user wants to send the compiled email
+                Console.WriteLine("\nYour email reads:\n" +
+                    $"To: {recipient}\n" +
+                    $"From: {sender}\n" +
+                    $"Subject: {subject}\n" +
+                    $"Message: {body}");
+                Console.WriteLine("Would you like to send your email?  Y/N");
+                string response = Console.ReadLine();
+                do
                 {
-                    // These declare the context of the message
-                    message.From = new MailAddress(sender);
-                    message.To.Add(recipient);
-                    message.Subject = subject;
-                    message.Body = body;
-
-
-                    for (int i = 1; i <= 3; i++)
-                    {
-                        bool SendResult = emailSVC.SendEmail(message).Result;
-                        if (!SendResult && i == 3)
-                        {
-                            _ = writeToDB(sender, recipient, subject, body, false);
-                        }
-                        else if (!SendResult)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            _ = writeToDB(sender, recipient, subject, body, true);
-                            break;
-                        }
-                    }
-                }
-                catch (ArgumentException)
-                {
-                    Console.WriteLine("You did not enter a value for your email address. \nPlease include only email addresses in the following format:  \"address@example.com\"");
-                    break;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine($"Sender: {message.Sender}\nrecipient: {message.From}\nOne of the email addresses you entered is not formatted correctly.\n" +
-                        "Be sure to use the format \"example@mail.com\"");
-                    break;
-                }
-
-
-
-
-                //Get user response of whether to continue writing emails or to exit program.
-                while(writeAnother == true)
-                {
-                    Console.WriteLine("Would you like to write another email? Y/N");
-                    string response = Console.ReadLine();
                     if (response != "Y" && response != "N")
                     {
                         Console.WriteLine("Please enter only Y or N");
+                        response = Console.ReadLine();
                     }
-                    else if (response == "N")
+                    else if (response == "Y")
+                    {
+                        //Calls the async method to send the email. This allows this method to be called without waiting for any response from the method.
+                        _ = emailSVC.SendEmail(sender, recipient, subject, body);
+                    }
+                } while (response != "Y" && response != "N");
+
+
+                    //Get user response of whether to continue writing emails or to exit program.
+                    while (writeAnother == true)
+                {
+                    Console.WriteLine("Would you like to write another email? Y/N");
+                    string more = Console.ReadLine();
+                    if (more != "Y" && more != "N")
+                    {
+                        Console.WriteLine("Please enter only Y or N");
+                    }
+                    else if (more == "N")
                     {
                         writeAnother = false;
                     }
@@ -112,44 +131,13 @@ namespace SendEmailConsole
                     {
                         break;
                     }
+
                 }
-                
 
             }
-
-            // A method to write the email data to the database asynchronously.
-            static async Task writeToDB(string sender, string recipient, string subject, string body, bool sendSuccessful)
-            {
-
-                using (var context = new EmailContext())
-                {
-                    // Creates an email entity which will be populated with the user data
-                    var em = new EmailEntity()
-                    {
-                        senderAddress = sender,
-                        recipeintAddress = recipient,
-                        subject = subject,
-                        sendSuccessful = sendSuccessful,
-                        sendTime = DateTime.Now,
-                        body = body
-                    };
-
-                    // Entity Framework adds em to the context (which connects to the database) and then saves the changes asynchronously.
-                    context.Emails.Add(em);
-                    await context.SaveChangesAsync();
-                }
-            }
-
+            
         }
-
-
-        //Added NuGet package:   Microsoft.Extensions.Hosting
-        //Added NuGet package:   Microsoft.EntityFrameworkCore.SqlServer
-        //Added NuGet package:   Microsoft.EntityFrameworkCore.Design
-        //Added NuGet package:   Microsoft.EntityFrameworkCore
-        //Added NuGet package:   
-
-
+ 
     }
 
 

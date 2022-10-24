@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SendEmailConsole;
+using SendEmailLibrary;
 
 #nullable disable
 
-namespace SendEmailConsole.Migrations
+namespace SendEmailLibrary.Migrations
 {
     [DbContext(typeof(EmailContext))]
     partial class EmailContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace SendEmailConsole.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("SendEmailConsole.EmailEntity", b =>
+            modelBuilder.Entity("SendEmailLibrary.EmailEntity", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()

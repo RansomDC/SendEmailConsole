@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SendEmailConsole;
+using SendEmailLibrary;
 
 #nullable disable
 
-namespace SendEmailConsole.Migrations
+namespace SendEmailLibrary.Migrations
 {
     [DbContext(typeof(EmailContext))]
-    [Migration("20221017041857_addSuccessfulsend")]
-    partial class addSuccessfulsend
+    [Migration("20221024035323_CreateEmailDB")]
+    partial class CreateEmailDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace SendEmailConsole.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("SendEmailConsole.EmailEntity", b =>
+            modelBuilder.Entity("SendEmailLibrary.EmailEntity", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()

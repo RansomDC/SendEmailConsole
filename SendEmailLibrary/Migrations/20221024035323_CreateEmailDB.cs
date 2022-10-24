@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SendEmailConsole.Migrations
+namespace SendEmailLibrary.Migrations
 {
     public partial class CreateEmailDB : Migration
     {
@@ -19,6 +19,7 @@ namespace SendEmailConsole.Migrations
                     recipeintAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     subject = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     body = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    sendSuccessful = table.Column<bool>(type: "bit", nullable: false),
                     sendTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
