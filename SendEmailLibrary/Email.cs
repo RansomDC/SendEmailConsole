@@ -23,28 +23,11 @@ namespace SendEmailLibrary
         }
 
         // This method can be called to use generate an email
-        public async Task SendEmail(string sender, string recipient, string subject, string body)
+        public async Task<bool> SendEmail(MailMessage message)
         {
 
             try
             {
-
-                var message = new MailMessage();
-
-                try
-                {
-                    // These declare the context of the message
-                    message.From = new MailAddress(sender);
-                    message.To.Add(recipient);
-                    message.Subject = subject;
-                    message.Body = body;
-                }
-                catch (ArgumentException argex)
-                {
-                    Console.WriteLine("One or more of the email addresses entered contained no value. \nPlease include only email addresses in the following format:  \"address@example.com\"");
-                    Console.WriteLine(argex);
-                }
-
 
                 // Opens connection to SMTP client which will relay the message
                 using (var smtpClient = new SmtpClient(_config.GetValue<string>("SMTPServer"), _config.GetValue<int>("SMTPPort")))
@@ -54,32 +37,22 @@ namespace SendEmailLibrary
                     smtpClient.Credentials = new NetworkCredential(_config.GetValue<string>("User"), _config.GetValue<string>("Password"));
                     smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
 
+                    throw new Exception();
+
                     // Sends the compiled message asynchronously
                     await smtpClient.SendMailAsync(message);
                 }
 
-                Console.WriteLine("sent");
-
+                return true;
             }
-            catch (System.Net.Mail.SmtpException)
+            catch (SmtpException)
             {
                 // Usually results from a bad password being input
-                Console.WriteLine("The SMTP server requires a secure connection or the client was not authenticated.");
-                Console.WriteLine("This could be due to the credentials being incorrect, check the password and login found in appsettings.json");
+                return false;
             }
-            catch (System.FormatException)
+            catch (Exception)
             {
-                //Either the sender address or the recipient address is formatted incorrectly
-                Console.WriteLine($"Sender: {sender}");
-                Console.WriteLine($"recipient: {recipient}");
-                Console.WriteLine("One of the email addresses you entered is not formatted correctly.");
-                Console.WriteLine("Be sure to use the format ' example@mail.com ' ");
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex);
-
+                return false;
             }
 
         }

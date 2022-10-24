@@ -1,7 +1,9 @@
-﻿namespace SendEmailLibrary
+﻿using System.Net.Mail;
+
+namespace SendEmailLibrary
 {
     public interface IEmail
     {
-        Task SendEmail(string sender, string recipient, string subject, string body);
+        Task<bool> SendEmail(MailMessage message);
     }
 }

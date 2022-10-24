@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -47,29 +48,52 @@ namespace SendEmailConsole
                 string body = Console.ReadLine();
                 if (body == "") { body = "<No body>"; }
 
-                Console.WriteLine("Attempting to send your email!");
+                Console.WriteLine("Attempting to send your email.");
 
-                for(int i = 1; i <= 3; i++)
+
+                var message = new MailMessage();
+
+                try
                 {
-                    try
-                    {
-                        // This calls the Email instance's SendEmail() method asynchronously
-                        _ = emailSVC.SendEmail(sender, recipient, subject, body);
-                        _ = writeToDB(sender, recipient, subject, body, true);
+                    // These declare the context of the message
+                    message.From = new MailAddress(sender);
+                    message.To.Add(recipient);
+                    message.Subject = subject;
+                    message.Body = body;
 
-                        break;
-                    }
-                    catch (Exception ex)
+
+                    for (int i = 1; i <= 3; i++)
                     {
-                        // If the for loop that attempts to send the email fails (goes to this catch block three times) the email will not be sent and will be logged as a failure.
-                        if(i == 3)
+                        bool SendResult = emailSVC.SendEmail(message).Result;
+                        if (!SendResult && i == 3)
                         {
                             _ = writeToDB(sender, recipient, subject, body, false);
-                            Console.WriteLine(ex);
-                            Console.WriteLine("Your email failed to send after 3 retries. A log has been made. Please contact your system administrator if the problem continues.");
+                        }
+                        else if (!SendResult)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            _ = writeToDB(sender, recipient, subject, body, true);
+                            break;
                         }
                     }
                 }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine("You did not enter a value for your email address. \nPlease include only email addresses in the following format:  \"address@example.com\"");
+                    break;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine($"Sender: {message.Sender}\nrecipient: {message.From}\nOne of the email addresses you entered is not formatted correctly.\n" +
+                        "Be sure to use the format \"example@mail.com\"");
+                    break;
+                }
+
+
+
 
                 //Get user response of whether to continue writing emails or to exit program.
                 while(writeAnother == true)
@@ -99,6 +123,7 @@ namespace SendEmailConsole
 
                 using (var context = new EmailContext())
                 {
+                    // Creates an email entity which will be populated with the user data
                     var em = new EmailEntity()
                     {
                         senderAddress = sender,
@@ -109,6 +134,7 @@ namespace SendEmailConsole
                         body = body
                     };
 
+                    // Entity Framework adds em to the context (which connects to the database) and then saves the changes asynchronously.
                     context.Emails.Add(em);
                     await context.SaveChangesAsync();
                 }
